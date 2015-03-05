@@ -3,6 +3,6 @@ MAINTAINER support@aboutsource.net
 
 RUN gem install mailcatcher --no-ri --no-rdoc
 
-EXPOSE 1080 25
+EXPOSE 1080 1025
 
-CMD ["mailcatcher", "--foreground", "--ip", "0.0.0.0", "--smtp-port", "25"]
+CMD ["mailcatcher", "--foreground", "--ip", "0.0.0.0"]
