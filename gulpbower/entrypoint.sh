@@ -31,7 +31,7 @@ else
     fi
     if [ ! -d "bower_components" ]; then
       echo Setup bower in `pwd`..
-      bower install
+      bower install --config.interactive=false
     fi
     if [ ! -d "dist" ]; then
       echo Precompile all in `pwd`..
