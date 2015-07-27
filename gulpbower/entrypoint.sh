@@ -37,8 +37,10 @@ else
       echo Precompile all in `pwd`..
       gulp
     fi
-    echo Starting watch process..
-    gulp watch
+    if [ -z "$1" ]; then
+      echo Starting watch process..
+      gulp watch
+    fi
   fi
 fi
 
