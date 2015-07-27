@@ -1,4 +1,4 @@
-FROM aboutsource/php-fpm
+FROM aboutsource/php-fpm:5.6
 
 MAINTAINER support@aboutsource.net
 
