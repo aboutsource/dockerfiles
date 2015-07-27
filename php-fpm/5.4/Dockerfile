@@ -42,8 +42,8 @@ RUN gpg \
   --keyserver pool.sks-keyservers.net \
   --recv-keys F38252826ACD957EF380D39F2F7956BC5DA04B5D
 
-RUN curl -SL "http://php.net/get/php-5.4.39.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
-  curl -SL "http://php.net/get/php-5.4.39.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
+RUN curl -SL "http://php.net/get/php-5.4.43.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
+  curl -SL "http://php.net/get/php-5.4.43.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
   gpg --verify php.tar.bz2.asc && \
   mkdir -p /usr/src/php && \
   tar -xf php.tar.bz2 -C /usr/src/php --strip-components=1 && \
