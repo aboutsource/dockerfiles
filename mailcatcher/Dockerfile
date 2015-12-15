@@ -1,17 +1,10 @@
 FROM ruby:2.2
+
 MAINTAINER support@aboutsource.net
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
-      make \
-      gcc \
-      g++ \
-      patch \
-      libsqlite3-dev && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
+ENV MAILCATCHER_VERSION=0.6.1
 
-RUN gem install mailcatcher --no-ri --no-rdoc
+RUN gem install mailcatcher --version $MAILCATCHER_VERSION --no-ri --no-rdoc
 
 EXPOSE 1080 1025
 
