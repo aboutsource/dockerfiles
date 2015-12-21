@@ -1,4 +1,4 @@
-FROM ruby:2.2
+FROM ruby:2.2.4
 
 MAINTAINER benjamin.meichsner@aboutsource.net
 
