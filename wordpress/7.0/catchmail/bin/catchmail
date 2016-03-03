@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+/**
+ * @author: Robert Pritzkow <robert.pritzkow@aboutsource.net>
+ */
+
+ini_set('display_errors', '0');
+
+require dirname(realpath(__FILE__)) . '/../vendor/autoload.php';
+
+$parser = new PhpMimeMailParser\Parser();
+$parser->setStream(fopen('php://stdin', 'r'));
+
+$mail = new PHPMailer();
+$mail->Host = 'mx';
+$mail->isSMTP();
+$mail->SMTPAutoTLS = false;
+
+$sender_idx = array_search('-f', $argv);
+if($sender_idx !== FALSE && isset($argv[$sender_idx+1])) {
+	$mail->setFrom($argv[$sender_idx+1]);
+}
+
+$headers = $parser->getHeaders();
+
+$headerMapping = array(
+	'to' => 'addAddress',
+	'cc' => 'addCC',
+	'bcc' => 'addBCC',
+	'reply-to' => 'addReplyTo',
+	'subject' => '_set'
+);
+
+foreach($headers as $k => $v) {
+	if(isset($headerMapping[$k])) {
+		if($headerMapping[$k] != '_set') {
+			array_map( array( $mail, $headerMapping[ $k ] ), array_map( 'trim', explode( ',', $v ) ) );
+		}
+		else {
+			$mail->set(ucfirst($k), $v);
+		}
+	}
+	else {
+		$mail->addCustomHeader($k, $v);
+	}
+}
+
+$text = $parser->getMessageBody('text');
+$html = $parser->getMessageBody('html');
+
+if($html) {
+	$mail->Body = $html;
+	$mail->isHTML(true);
+}
+if($text) {
+	if($html) {
+		$mail->AltBody = $text;
+	}
+	else {
+		$mail->Body = $text;
+	}
+}
+
+if(!$mail->send()) {
+	exit(1);
+}

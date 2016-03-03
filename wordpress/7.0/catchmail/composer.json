@@ -1,0 +1,17 @@
+{
+    "name": "aboutsource/catchmail",
+    "require": {
+        "phpmailer/phpmailer": "~5.2",
+        "php-mime-mail-parser/php-mime-mail-parser": "~2.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robert Pritzkow",
+            "email": "robert.pritzkow@aboutsource.net"
+        }
+    ],
+    "bin": [
+      "bin/catchmail"
+    ]
+}
