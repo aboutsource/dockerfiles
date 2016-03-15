@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM debian:jessie
 
 MAINTAINER support@aboutsource.net
 
@@ -21,7 +21,6 @@ RUN apt-get update && \
     libicu-dev \
     libfcgi-dev \
     libssl-dev \
-    libsslcommon2-dev \
     libbz2-dev \
     libmcrypt-dev \
     libxml2-dev \
@@ -42,8 +41,8 @@ RUN gpg \
   --keyserver pool.sks-keyservers.net \
   --recv-keys 6E4F6AB321FDC07F2C332E3AC2BF0BC433CFC8B3 0BD78B5F97500D450838F95DFE857D9A90D90EC1
 
-RUN curl -SL "http://php.net/get/php-5.6.18.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
-  curl -SL "http://php.net/get/php-5.6.18.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
+RUN curl -SL "http://php.net/get/php-5.6.19.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
+  curl -SL "http://php.net/get/php-5.6.19.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
   gpg --verify php.tar.bz2.asc && \
   mkdir -p /usr/src/php && \
   tar -xf php.tar.bz2 -C /usr/src/php --strip-components=1 && \
