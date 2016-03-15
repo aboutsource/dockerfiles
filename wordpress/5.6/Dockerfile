@@ -6,3 +6,5 @@ RUN curl -Ls -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/down
   chmod +x /usr/local/bin/wp
 
 RUN apt-get update && apt-get install less
+
+COPY wordpress-debug-tools /usr/local/src/wordpress-debug-tools
