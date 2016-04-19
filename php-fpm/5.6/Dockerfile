@@ -41,8 +41,8 @@ RUN gpg \
   --keyserver pool.sks-keyservers.net \
   --recv-keys 6E4F6AB321FDC07F2C332E3AC2BF0BC433CFC8B3 0BD78B5F97500D450838F95DFE857D9A90D90EC1
 
-RUN curl -SL "http://php.net/get/php-5.6.19.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
-  curl -SL "http://php.net/get/php-5.6.19.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
+RUN curl -SL "http://php.net/get/php-5.6.20.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
+  curl -sL "http://php.net/get/php-5.6.20.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
   gpg --verify php.tar.bz2.asc && \
   mkdir -p /usr/src/php && \
   tar -xf php.tar.bz2 -C /usr/src/php --strip-components=1 && \
