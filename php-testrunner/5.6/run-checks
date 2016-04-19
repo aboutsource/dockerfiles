@@ -1,0 +1,87 @@
+#!/usr/bin/env php
+<?php
+
+class RunCodeChecks {
+
+    const EXTENSIONS = 'php,phtml';
+    const EXCLUDES = '*/vendor/*';
+    const PHPCS_STANDARDS = 'aboutsource-WordPress';
+    const PHPMD_STANDARDS = 'cleancode,codesize,design,unusedcode';
+    const PHPMD_OUTPUT = 'text';
+    const DEFAULT_TIMEZONE = 'UTC';
+
+    protected $_paths;
+
+    public function __construct($paths) {
+        $paths = is_array($paths) ? $paths : array($paths);
+
+        $this->_paths = array_map('trim', $paths);
+        $this->_paths = array_unique($this->_paths);
+        $this->_paths = array_map(function($path) {
+           return strpos($path, '/') === 0 ? $path : "application/wp-content/{$path}";
+        }, $this->_paths);
+    }
+
+    public function execute() {
+        if(empty($this->_paths)) {
+                return $this->showBanner();
+        }
+
+        // Make sure all checks are executed and the result is the total of all calls
+        return array_reduce(['runCodeSniffer', 'runMessDetector'], function($total, $method) {
+            $current = call_user_func(array($this, $method));
+            return $total && $current;
+        }, true);
+    }
+
+    protected function runCodeSniffer() {
+        $phpMinorVersion = implode('.', array_slice(explode('.', phpversion()),0, 2));
+        $codeSniffCmd = 'phpcs --standard=%1$s --extensions=%2$s --ignore=%3$s --runtime-set testVersion %4$s -d date.timezone=%5$s %6$s';
+        $exitCode = $this->runCommand(
+                                $codeSniffCmd,
+                                array(
+                                    escapeshellarg(self::PHPCS_STANDARDS),
+                                    escapeshellarg(self::EXTENSIONS),
+                                    escapeshellarg(self::EXCLUDES),
+                                    escapeshellarg($phpMinorVersion),
+                                    escapeshellarg(self::DEFAULT_TIMEZONE),
+                                    implode(' ', array_map('escapeshellarg', $this->_paths))
+                                )
+                           );
+        return $exitCode === 0;
+    }
+
+    protected function runMessDetector() {
+       $codeMessCmd = 'phpmd %1$s %2$s %3$s --suffixes %4$s --exclude %5$s';
+       $exitCode = $this->runCommand(
+                                $codeMessCmd,
+                                array(
+                                    escapeshellarg(implode(',',$this->_paths)),
+                                    escapeshellarg(self::PHPMD_OUTPUT),
+                                    escapeshellarg(self::PHPMD_STANDARDS),
+                                    escapeshellarg(self::EXTENSIONS),
+                                    escapeshellarg(self::EXCLUDES)
+                                )
+                          );
+      return $exitCode === 0;
+    }
+
+    protected function showBanner() {
+        echo "Usage: {__FILE__} <file>..." . PHP_EOL;
+        return false;
+    }
+
+    protected function runCommand($commandTemplate, $args) {
+        $exitCode = -1;
+        $args = is_array($args) ? $args : array($args);
+        $command = vsprintf($commandTemplate, $args);
+        echo "Running command: {$command}...\n";
+        system($command, $exitCode);
+        return $exitCode;
+    }
+}
+
+$runner = new RunCodeChecks(array_slice($argv, 1));
+if(!$runner->execute()) {
+    exit(1);
+}
