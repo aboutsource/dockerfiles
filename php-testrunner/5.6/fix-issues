@@ -3,7 +3,7 @@
 
 require '/usr/local/src/BaseRunner.class.php';
 
-class RunCodeChecks extends BaseRunner {
+class FixIssues extends BaseRunner {
 
     public function execute() {
         if(empty($this->_paths)) {
@@ -11,17 +11,17 @@ class RunCodeChecks extends BaseRunner {
         }
 
         // Make sure all checks are executed and the result is the total of all calls
-        return array_reduce(['runCodeSniffer', 'runMessDetector'], function($total, $method) {
+        return array_reduce(['runCodeBeautifierAndFixer'], function($total, $method) {
             $current = call_user_func(array($this, $method));
             return $total && $current;
         }, true);
     }
 
-    protected function runCodeSniffer() {
+    protected function runCodeBeautifierAndFixer() {
         $phpMinorVersion = implode('.', array_slice(explode('.', phpversion()),0, 2));
-        $codeSniffCmd = 'phpcs --standard=%1$s --extensions=%2$s --ignore=%3$s --runtime-set testVersion %4$s -d date.timezone=%5$s %6$s';
+        $codeBeautifierCmd = 'phpcbf --standard=%1$s --extensions=%2$s --ignore=%3$s --runtime-set testVersion %4$s -d date.timezone=%5$s %6$s';
         $exitCode = $this->runCommand(
-                                $codeSniffCmd,
+                                $codeBeautifierCmd,
                                 array(
                                     escapeshellarg(self::PHPCS_STANDARDS),
                                     escapeshellarg(self::EXTENSIONS),
@@ -34,21 +34,6 @@ class RunCodeChecks extends BaseRunner {
         return $exitCode === 0;
     }
 
-    protected function runMessDetector() {
-       $codeMessCmd = 'phpmd %1$s %2$s %3$s --suffixes %4$s --exclude %5$s';
-       $exitCode = $this->runCommand(
-                                $codeMessCmd,
-                                array(
-                                    escapeshellarg(implode(',',$this->_paths)),
-                                    escapeshellarg(self::PHPMD_OUTPUT),
-                                    escapeshellarg(self::PHPMD_STANDARDS),
-                                    escapeshellarg(self::EXTENSIONS),
-                                    escapeshellarg(self::EXCLUDES)
-                                )
-                          );
-      return $exitCode === 0;
-    }
-
     protected function showBanner() {
         $self = basename(__FILE__);
         echo "Usage: {$self} <file>..." . PHP_EOL;
@@ -56,7 +41,7 @@ class RunCodeChecks extends BaseRunner {
     }
 }
 
-$runner = new RunCodeChecks(array_slice($argv, 1));
+$runner = new FixIssues(array_slice($argv, 1));
 if(!$runner->execute()) {
     exit(1);
 }

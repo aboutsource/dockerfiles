@@ -25,6 +25,8 @@ RUN cp -R  \
 RUN mkdir -p /usr/local/src/aboutsource-wp-phpcs/aboutsource-WordPress/
 COPY ruleset.xml /usr/local/src/aboutsource-wp-phpcs/aboutsource-WordPress/
 COPY run-checks /usr/local/bin/
+COPY fix-issues /usr/local/bin/
+COPY BaseRunner.class.php /usr/local/src/
 
 RUN phpcs \
     --config-set installed_paths \
