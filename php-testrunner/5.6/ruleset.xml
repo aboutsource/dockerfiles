@@ -41,4 +41,8 @@
         <severity>0</severity>
     </rule>
     <rule ref="WordPress.Files.FileName"/>
+
+    <!-- Taken from WordPress-VIP -->
+    <rule ref="Squiz.PHP.CommentedOutCode" />
+
 </ruleset>
