@@ -5,7 +5,7 @@ abstract class BaseRunner {
     const EXTENSIONS = 'php,phtml';
     const EXCLUDES = '*/vendor/*';
     const PHPCS_STANDARDS = 'aboutsource-WordPress';
-    const PHPMD_STANDARDS = 'cleancode,codesize,design,unusedcode';
+    const PHPMD_STANDARDS = 'cleancode,codesize,design,unusedcode'; // moved to custom ruleset to disable some rule
     const PHPMD_OUTPUT = 'text';
     const DEFAULT_TIMEZONE = 'UTC';
 

@@ -46,7 +46,7 @@ class FixIssues extends BaseRunner {
 
 }
 
-$runner = new FixIssues(array_slice($argv, 1));
+$runner = new FixIssues($argv);
 if(!$runner->execute()) {
     exit(1);
 }

@@ -9,9 +9,9 @@ ENV PATH="$COMPOSER_PATH/bin:$PATH"
 
 WORKDIR /var/www/html
 
-# git and unzip are needed for composer
+# git and unzip are needed for composer, patch by phpcbf
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git-core unzip \
+    && apt-get install -y --no-install-recommends git-core unzip patch \
     && apt-get autoremove -y \
     && apt-get purge -y \
     && rm -rf /var/lib/apt/lists/*
@@ -31,9 +31,10 @@ RUN composer global require \
        $COMPOSER_PATH/squizlabs/php_codesniffer/CodeSniffer/Standards/PHPCompatibility \
        && mkdir -p /usr/local/src/aboutsource-wp-phpcs/aboutsource-WordPress/
 
-COPY ["ruleset.xml", "/usr/local/src/aboutsource-wp-phpcs/aboutsource-WordPress/"]
-COPY ["BaseRunner.class.php", "/usr/local/src"]
-COPY ["run-checks", "fix-issues", "/usr/local/bin/"]
+COPY ["rulesets/phpcs.xml", "/usr/local/src/aboutsource-wp-phpcs/aboutsource-WordPress/ruleset.xml"]
+COPY ["rulesets/phpmd.xml", "/usr/local/src/aboutsource-phpmd-ruleset.xml"]
+COPY ["src/BaseRunner.class.php", "/usr/local/src"]
+COPY ["src/run-checks", "src/fix-issues", "/usr/local/bin/"]
 
 RUN phpcs --config-set installed_paths \
     $COMPOSER_PATH/wp-coding-standards/wpcs,/usr/local/src/aboutsource-wp-phpcs \

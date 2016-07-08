@@ -74,7 +74,7 @@ class RunCodeChecks extends BaseRunner {
                                 array(
                                     escapeshellarg(implode(',',$this->_paths)),
                                     escapeshellarg(self::PHPMD_OUTPUT),
-                                    escapeshellarg(self::PHPMD_STANDARDS),
+                                    escapeshellarg('/usr/local/src/aboutsource-phpmd-ruleset.xml'),
                                     escapeshellarg(self::EXTENSIONS),
                                     escapeshellarg(self::EXCLUDES)
                                 )
