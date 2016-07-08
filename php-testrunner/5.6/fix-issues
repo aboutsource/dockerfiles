@@ -39,6 +39,11 @@ class FixIssues extends BaseRunner {
         echo "Usage: {$self} <file>..." . PHP_EOL;
         return false;
     }
+
+    protected function getOptionDefinition() {
+        return [];
+    }
+
 }
 
 $runner = new FixIssues(array_slice($argv, 1));

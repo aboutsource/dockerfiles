@@ -5,6 +5,15 @@ require '/usr/local/src/BaseRunner.class.php';
 
 class RunCodeChecks extends BaseRunner {
 
+    public function __construct($paths)
+    {
+        parent::__construct($paths);
+        $this->_options = array_merge([
+          'hide-warnings' => false,
+          'ignore-warnings-on-exit' => false
+        ], $this->_options);
+    }
+
     public function execute() {
         if(empty($this->_paths)) {
                 return $this->showBanner();
@@ -19,7 +28,27 @@ class RunCodeChecks extends BaseRunner {
 
     protected function runCodeSniffer() {
         $phpMinorVersion = implode('.', array_slice(explode('.', phpversion()),0, 2));
-        $codeSniffCmd = 'phpcs --standard=%1$s --extensions=%2$s --ignore=%3$s --runtime-set testVersion %4$s -d date.timezone=%5$s %6$s';
+
+        $options = [
+            '--standard=%1$s',
+            '--extensions=%2$s',
+            '--ignore=%3$s',
+            '--runtime-set testVersion %4$s',
+            '-d date.timezone=%5$s',
+        ];
+
+        if($this->getOption('hide-warnings', false)){
+            $options[] = '--warning-severity=0';
+        }
+
+        if($this->getOption('ignore-warnings-on-exit', false)){
+            $this->runCommand('phpcs --config-set ignore_warnings_on_exit 1', []);
+        }
+        else {
+            $this->runCommand('phpcs --config-set ignore_warnings_on_exit 0', []);
+        }
+
+        $codeSniffCmd = 'phpcs ' . implode(' ', $options) . ' %6$s';
         $exitCode = $this->runCommand(
                                 $codeSniffCmd,
                                 array(
@@ -31,6 +60,10 @@ class RunCodeChecks extends BaseRunner {
                                     implode(' ', array_map('escapeshellarg', $this->_paths))
                                 )
                            );
+
+        // reset config
+        $this->runCommand('phpcs --config-set ignore_warnings_on_exit 0', []);
+
         return $exitCode === 0;
     }
 
@@ -51,12 +84,26 @@ class RunCodeChecks extends BaseRunner {
 
     protected function showBanner() {
         $self = basename(__FILE__);
-        echo "Usage: {$self} <file>..." . PHP_EOL;
+        echo "Usage: {$self} [OPTIONS] <file> <file>..." . PHP_EOL;
+        echo <<<TEXT
+Options:
+  --hide-warnings - don't show warnings
+  --ignore-warnings-on-exit - show warnings but don't fail due to warnings
+
+TEXT;
+
         return false;
+    }
+
+    protected function getOptionDefinition() {
+        return [
+          'hide-warnings',
+          'ignore-warnings-on-exit'
+        ];
     }
 }
 
-$runner = new RunCodeChecks(array_slice($argv, 1));
+$runner = new RunCodeChecks($argv);
 if(!$runner->execute()) {
     exit(1);
 }
