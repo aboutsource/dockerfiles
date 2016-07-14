@@ -1,0 +1,109 @@
+#!/usr/bin/env php
+<?php
+
+require '/usr/local/src/BaseRunner.class.php';
+
+class RunCodeChecks extends BaseRunner {
+
+    public function __construct($paths)
+    {
+        parent::__construct($paths);
+        $this->_options = array_merge([
+          'hide-warnings' => false,
+          'ignore-warnings-on-exit' => false
+        ], $this->_options);
+    }
+
+    public function execute() {
+        if(empty($this->_paths)) {
+                return $this->showBanner();
+        }
+
+        // Make sure all checks are executed and the result is the total of all calls
+        return array_reduce(['runCodeSniffer', 'runMessDetector'], function($total, $method) {
+            $current = call_user_func(array($this, $method));
+            return $total && $current;
+        }, true);
+    }
+
+    protected function runCodeSniffer() {
+        $phpMinorVersion = implode('.', array_slice(explode('.', phpversion()),0, 2));
+
+        $options = [
+            '--standard=%1$s',
+            '--extensions=%2$s',
+            '--ignore=%3$s',
+            '--runtime-set testVersion %4$s',
+            '-d date.timezone=%5$s',
+        ];
+
+        if($this->getOption('hide-warnings', false)){
+            $options[] = '--warning-severity=0';
+        }
+
+        if($this->getOption('ignore-warnings-on-exit', false)){
+            $this->runCommand('phpcs --config-set ignore_warnings_on_exit 1', []);
+        }
+        else {
+            $this->runCommand('phpcs --config-set ignore_warnings_on_exit 0', []);
+        }
+
+        $codeSniffCmd = 'phpcs ' . implode(' ', $options) . ' %6$s';
+        $exitCode = $this->runCommand(
+                                $codeSniffCmd,
+                                array(
+                                    escapeshellarg(self::PHPCS_STANDARDS),
+                                    escapeshellarg(self::EXTENSIONS),
+                                    escapeshellarg(self::EXCLUDES),
+                                    escapeshellarg($phpMinorVersion),
+                                    escapeshellarg(self::DEFAULT_TIMEZONE),
+                                    implode(' ', array_map('escapeshellarg', $this->_paths))
+                                )
+                           );
+
+        // reset config
+        $this->runCommand('phpcs --config-set ignore_warnings_on_exit 0', []);
+
+        return $exitCode === 0;
+    }
+
+    protected function runMessDetector() {
+       $codeMessCmd = 'phpmd %1$s %2$s %3$s --suffixes %4$s --exclude %5$s';
+       $exitCode = $this->runCommand(
+                                $codeMessCmd,
+                                array(
+                                    escapeshellarg(implode(',',$this->_paths)),
+                                    escapeshellarg(self::PHPMD_OUTPUT),
+                                    escapeshellarg('/usr/local/src/aboutsource-phpmd-ruleset.xml'),
+                                    escapeshellarg(self::EXTENSIONS),
+                                    escapeshellarg(self::EXCLUDES)
+                                )
+                          );
+      return $exitCode === 0;
+    }
+
+    protected function showBanner() {
+        $self = basename(__FILE__);
+        echo "Usage: {$self} [OPTIONS] <file> <file>..." . PHP_EOL;
+        echo <<<TEXT
+Options:
+  --hide-warnings - don't show warnings
+  --ignore-warnings-on-exit - show warnings but don't fail due to warnings
+
+TEXT;
+
+        return false;
+    }
+
+    protected function getOptionDefinition() {
+        return [
+          'hide-warnings',
+          'ignore-warnings-on-exit'
+        ];
+    }
+}
+
+$runner = new RunCodeChecks($argv);
+if(!$runner->execute()) {
+    exit(1);
+}

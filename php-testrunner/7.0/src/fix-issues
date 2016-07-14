@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+
+require '/usr/local/src/BaseRunner.class.php';
+
+class FixIssues extends BaseRunner {
+
+    public function execute() {
+        if(empty($this->_paths)) {
+                return $this->showBanner();
+        }
+
+        // Make sure all checks are executed and the result is the total of all calls
+        return array_reduce(['runCodeBeautifierAndFixer'], function($total, $method) {
+            $current = call_user_func(array($this, $method));
+            return $total && $current;
+        }, true);
+    }
+
+    protected function runCodeBeautifierAndFixer() {
+        $phpMinorVersion = implode('.', array_slice(explode('.', phpversion()),0, 2));
+        $codeBeautifierCmd = 'phpcbf --standard=%1$s --extensions=%2$s --ignore=%3$s --runtime-set testVersion %4$s -d date.timezone=%5$s %6$s';
+        $exitCode = $this->runCommand(
+                                $codeBeautifierCmd,
+                                array(
+                                    escapeshellarg(self::PHPCS_STANDARDS),
+                                    escapeshellarg(self::EXTENSIONS),
+                                    escapeshellarg(self::EXCLUDES),
+                                    escapeshellarg($phpMinorVersion),
+                                    escapeshellarg(self::DEFAULT_TIMEZONE),
+                                    implode(' ', array_map('escapeshellarg', $this->_paths))
+                                )
+                           );
+        return $exitCode === 0;
+    }
+
+    protected function showBanner() {
+        $self = basename(__FILE__);
+        echo "Usage: {$self} <file>..." . PHP_EOL;
+        return false;
+    }
+
+    protected function getOptionDefinition() {
+        return [];
+    }
+
+}
+
+$runner = new FixIssues($argv);
+if(!$runner->execute()) {
+    exit(1);
+}
