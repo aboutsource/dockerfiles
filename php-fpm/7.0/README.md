@@ -1,3 +1,3 @@
 # Docker image for php-fpm
 
-PHP-Version: 7.0.5
+PHP-Version: 7.0.10

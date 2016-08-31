@@ -1,3 +1,3 @@
 # Docker image for php-fpm
 
-PHP-Version: 5.6.20
+PHP-Version: 5.6.25
