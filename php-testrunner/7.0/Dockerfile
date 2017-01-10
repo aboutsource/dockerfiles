@@ -1,9 +1,9 @@
-FROM php:7-cli
+FROM php:7.0.14-cli
 
 MAINTAINER support@aboutsource.net
 
 ENV COMPOSER_PATH="/root/.composer/vendor" \
-    COMPOSER_VERSION="1.1.3"
+    COMPOSER_VERSION="1.3.1"
 
 ENV PATH="$COMPOSER_PATH/bin:$PATH"
 
