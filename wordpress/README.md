@@ -7,15 +7,15 @@ To specify a version set the environment variable `WP_CLI_VERSION` to the desire
 
 ## aboutsource/wordpress:5.6
 
-PHP: 5.6.29
-Composer: 1.3.1
-WP CLI: 0.24.1, 0.25.0 (default), 1.0.0
+PHP: 5.6.33
+Composer: 1.6.3
+WP CLI: 0.24.1, 0.25.0 (default), 1.5.0
 
 ## aboutsource/wordpress:7.0
 
-PHP: 7.0.14
-Composer: 1.3.1
-WP CLI: 0.24.1, 0.25.0 (default), 1.0.0
+PHP: 7.0.27
+Composer: 1.6.3
+WP CLI: 0.24.1, 0.25.0 (default), 1.5.0
 
 ## aboutsource/wordpress:*-debug
 
