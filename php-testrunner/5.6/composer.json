@@ -1,7 +1,7 @@
 {
     "name": "aboutsource/php-testrunner",
     "require": {
-        "php":"^7.0",
+        "php":"^5.6",
         "wp-coding-standards/wpcs": "^0.14",
         "wimg/php-compatibility": "^8.1.0",
         "phpmd/phpmd": "^2.6.0"
