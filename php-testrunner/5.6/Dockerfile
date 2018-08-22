@@ -1,4 +1,4 @@
-FROM php:5.6.33-cli
+FROM php:5.6.37-cli
 
 MAINTAINER support@aboutsource.net
 

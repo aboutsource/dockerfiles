@@ -1,6 +1,6 @@
 # Docker image for php-testrunner
 
-    PHP-Version: 5.6.33
+    PHP-Version: 5.6.37
     Composer: 1.6.3
 
 Includes:
