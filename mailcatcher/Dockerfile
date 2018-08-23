@@ -1,6 +1,6 @@
 FROM ruby:2.2
 
-MAINTAINER support@aboutsource.net
+LABEL maintainer="support@aboutsource.net"
 
 ENV MAILCATCHER_VERSION=0.6.1
 

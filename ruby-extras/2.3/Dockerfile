@@ -1,6 +1,6 @@
 FROM ruby:2.3.0
 
-MAINTAINER benjamin.meichsner@aboutsource.net
+LABEL maintainer="benjamin.meichsner@aboutsource.net"
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y \

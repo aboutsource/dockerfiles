@@ -1,6 +1,6 @@
 FROM aboutsource/php-fpm:7.0.31
 
-MAINTAINER support@aboutsource.net
+LABEL maintainer="support@aboutsource.net"
 
 RUN apt-get update && apt-get install -y --no-install-recommends less git openssh-client && rm -rf /var/lib/apt/lists/*
 

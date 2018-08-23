@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-MAINTAINER support@aboutsource.net
+LABEL maintainer="support@aboutsource.net"
 
 RUN apt-get update && \
   apt-get install -y --no-install-recommends \

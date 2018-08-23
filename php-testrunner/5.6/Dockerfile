@@ -1,6 +1,6 @@
 FROM php:5.6.37-cli
 
-MAINTAINER support@aboutsource.net
+LABEL maintainer="support@aboutsource.net"
 
 ENV COMPOSER_PATH="/root/.composer" \
     COMPOSER_VERSION="1.7.2" \
