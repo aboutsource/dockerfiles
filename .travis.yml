@@ -13,7 +13,9 @@ env:
     - SERVICE=php-testrunner VERSION=5.6
     - SERVICE=php-testrunner VERSION=7.0
     - SERVICE=wordpress VERSION=5.6
+    - SERVICE=wordpress VERSION=5.6-debug
     - SERVICE=wordpress VERSION=7.0
+    - SERVICE=wordpress VERSION=7.0-debug
     - SERVICE=ruby-extras VERSION=2.3
 
 script:
