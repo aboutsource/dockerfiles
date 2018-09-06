@@ -1,4 +1,4 @@
-# Docker image for wordpress development
+# Docker images for wordpress development
 
 This image adds some development convenience to the basic aboutsource/php-fpm image
 
