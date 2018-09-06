@@ -1,0 +1,24 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_REGISTRY=quay.io
+    - DOCKER_ORGANIZATION=aboutsource
+  matrix:
+    - SERVICE=php-fpm VERSION=5.6
+    - SERVICE=php-fpm VERSION=7.0
+    - SERVICE=php-testrunner VERSION=5.6
+    - SERVICE=php-testrunner VERSION=7.0
+    - SERVICE=wordpress VERSION=5.6
+    - SERVICE=wordpress VERSION=7.0
+    - SERVICE=ruby-extras VERSION=2.3
+
+script:
+  - docker build -t $DOCKER_REGISTRY/$DOCKER_ORGANIZATION/$SERVICE:$VERSION $SERVICE/$VERSION
+
+deploy:
+  provider: script
+  script: bash docker_push.sh
