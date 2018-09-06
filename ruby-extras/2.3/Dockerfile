@@ -1,4 +1,4 @@
-FROM ruby:2.3.0
+FROM ruby:2.3.7
 
 LABEL maintainer="benjamin.meichsner@aboutsource.net"
 
