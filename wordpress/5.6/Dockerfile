@@ -1,4 +1,4 @@
-FROM aboutsource/php-fpm:5.6.37
+FROM quay.io/aboutsource/php-fpm:5.6
 
 LABEL maintainer="support@aboutsource.net"
 
