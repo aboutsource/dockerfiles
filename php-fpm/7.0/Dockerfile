@@ -41,7 +41,7 @@ RUN gpg \
   --keyserver pool.sks-keyservers.net \
   --recv-keys 1A4E8B7277C42E53DBA9C7B9BCAA30EA9C0D5763 6E4F6AB321FDC07F2C332E3AC2BF0BC433CFC8B3
 
-RUN curl -sL "f" -o php.tar.bz2 && \
+RUN curl -sL "https://secure.php.net/get/php-7.0.31.tar.bz2/from/this/mirror" -o php.tar.bz2 && \
   curl -sL "https://secure.php.net/get/php-7.0.31.tar.bz2.asc/from/this/mirror" -o php.tar.bz2.asc && \
   gpg --verify php.tar.bz2.asc && \
   mkdir -p /usr/src/php && \
