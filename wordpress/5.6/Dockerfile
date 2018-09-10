@@ -2,7 +2,7 @@ FROM quay.io/aboutsource/php-fpm:5.6
 
 LABEL maintainer="support@aboutsource.net"
 
-RUN apt-get update && apt-get install -y --no-install-recommends less git openssh-client && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends less git openssh-client unzip && rm -rf /var/lib/apt/lists/*
 
 ENV WP_CLI_VERSION 0.25.0
 ENV COMPOSER_VERSION 1.7.2
