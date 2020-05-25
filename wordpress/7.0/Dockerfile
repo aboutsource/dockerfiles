@@ -4,13 +4,14 @@ LABEL maintainer="support@aboutsource.net"
 
 RUN apt-get update && apt-get install -y --no-install-recommends less git openssh-client unzip && rm -rf /var/lib/apt/lists/*
 
-ENV WP_CLI_VERSION 0.25.0
+ENV WP_CLI_VERSION 2.4.0
 ENV COMPOSER_VERSION 1.7.2
 
 RUN mkdir -p /usr/local/lib/wp-cli && \
   curl -Ls -o /usr/local/lib/wp-cli/wp-0.24.1.phar https://github.com/wp-cli/wp-cli/releases/download/v0.24.1/wp-cli-0.24.1.phar && \
   curl -Ls -o /usr/local/lib/wp-cli/wp-0.25.0.phar https://github.com/wp-cli/wp-cli/releases/download/v0.25.0/wp-cli-0.25.0.phar && \
-  curl -Ls -o /usr/local/lib/wp-cli/wp-1.5.0.phar https://github.com/wp-cli/wp-cli/releases/download/v1.5.0/wp-cli-1.5.0.phar
+  curl -Ls -o /usr/local/lib/wp-cli/wp-1.5.0.phar https://github.com/wp-cli/wp-cli/releases/download/v1.5.0/wp-cli-1.5.0.phar && \
+  curl -Ls -o /usr/local/lib/wp-cli/wp-2.4.0.phar https://github.com/wp-cli/wp-cli/releases/download/v2.4.0/wp-cli-2.4.0.phar
 
 COPY wpcli-wrapper.sh /usr/local/bin/wp
 
